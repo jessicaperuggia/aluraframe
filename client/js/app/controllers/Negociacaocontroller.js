@@ -6,24 +6,53 @@ class NegociacaoController {
         this._inputData = $('#data');
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
-        this._listaNegociacoes = new ListaNecociacoes();
-        
-        this.negociacoesView = new NegociacoesView($('#negociacoesView'));
+
+        let self = this;
+
+        this._listaNegociacoes = new Proxy(new ListaNegociacoes(), {
+
+            get(target, prop, receiver) {
+
+                if(['adiciona', 'esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)) {
+
+                return function() {
+
+                    console.log(`interceptando ${prop}`);
+                    Reflect.apply(target[prop], target, arguments);
+                    self._negociacoesView.update(target);
+                }
+            }
+            
+            return Reflect.get(target, prop, receiver);
+        }
+
+    });
+
+        this._negociacoesView = new NegociacoesView($('#negociacoesView'));
         this._negociacoesView.update(this._listaNegociacoes);
 
-        this._menssagem = new Menssagem();
-        this._menssagemView = new MenssagemView($('#menssagemView'));
-        this._menssagemView.update(this._menssagem);
+        this._mensagem = new Mensagem();
+        this._mensagemView = new MensagemView($('#mensagemView'));
+        this._mensagemView.update(this._mensagem);
     }
-    adiciona(event) {
-        
-        event.preventDefault();
-       
-        this._listaNegociacoes.adiciona(this._negociacao());
-        this._menssagem.texto = 'Negociação adicionada com sucesso';
-        this._negociacoesView.update(this._listaNegociacoes);
-        this._limpaFormulario();
 
+    adiciona(event) {
+
+        event.preventDefault();
+        this._listaNegociacoes.adiciona(this._criaNegociacao());
+
+        this._mensagem.texto = 'Negociação adicionada com sucesso';
+        this._mensagemView.update(this._mensagem);
+
+        this._limpaFormulario();
+    }
+
+    apaga() {
+
+        this._listaNegociacoes.esvazia();
+        
+        this._mensagem.texto = 'Negociações apagadas com sucesso';
+        this._mensagemView.update(this._mensagem);
     }
 
     _criaNegociacao() {
@@ -33,7 +62,7 @@ class NegociacaoController {
             this._inputQuantidade.value,
             this._inputValor.value);
     }
-    
+
     _limpaFormulario() {
 
         this._inputData.value = '';

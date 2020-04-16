@@ -1,8 +1,8 @@
-class ListaNecociacoes {
+class ListaNegociacoes {
 
     constructor() {
         
-        this._necociacoes = []
+        this._negociacoes = [];
     }
 
     adiciona(negociacao) {
@@ -15,4 +15,8 @@ class ListaNecociacoes {
         return [].concat(this._negociacoes);
     }
 
+    esvazia() {
+
+        this._negociacoes = [];
+    }
 }

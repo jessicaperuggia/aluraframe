@@ -1,13 +1,13 @@
 class NegociacoesView extends View {
 
     constructor(elemento) {
+       
         super(elemento);
     }
 
-    _templete(model) {
+    template(model) {
 
         return `
-        
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
@@ -19,7 +19,6 @@ class NegociacoesView extends View {
             </thead>
 
             <tbody>
-
                 ${model.negociacoes.map(n => `
 
                     <tr>
@@ -29,8 +28,7 @@ class NegociacoesView extends View {
                         <td>${n.volume}</td>
                     </tr>
 
-                `).jpoin('')}
-
+                `).join('')}
             </tbody>
 
             <tfoot>
@@ -43,8 +41,4 @@ class NegociacoesView extends View {
         </table>
         `;
     }
-
 }
-
-
-

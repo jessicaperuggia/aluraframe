@@ -19,7 +19,6 @@ class NegociacaoController {
             new MensagemView($('#mensagemView')),
             this._mensagemView,
             'texto');
-      
     }
 
     adiciona(event) {
@@ -28,6 +27,22 @@ class NegociacaoController {
         this._listaNegociacoes.adiciona(this._criaNegociacao());
         this._mensagem.texto = 'Negociação adicionada com sucesso';
         this._limpaFormulario();
+    }
+
+    importaNegociacao(){
+
+        let service = new NegociacaoService();
+
+        service.obterNegociacaoDaSemana((erro, negociacoes) => {
+
+            if(erro) {
+                this._mensagem.texto = erro;
+                return;
+            }
+
+            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            this._mensagem.texto = 'Negociações importadas com sucesso';
+        });
     }
 
     apaga() {

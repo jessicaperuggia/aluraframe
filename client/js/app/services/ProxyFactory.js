@@ -1,6 +1,6 @@
 class ProxyFactory {
 
-    static createProxy(objeto, props, acao) {
+    static create(objeto, props, acao) {
 
         return new Proxy(objeto, {
 
@@ -10,10 +10,11 @@ class ProxyFactory {
                     
                     return function() {
 
-                        console.log(`a propriedade "${prop}" foi interceptada`);
-                        Reflect.apply(target[prop], target, arguments);
-                        return acao(target);
-                    };
+                        console.log(`interceptando ${prop}`);
+                        let retorno = Reflect.apply(target[prop], target, arguments);
+                       acao(target);
+                        return retorno;
+                    }
                 }
             
                 return Reflect.get(target, prop, receiver);
@@ -21,16 +22,11 @@ class ProxyFactory {
 
             set(target, prop, value, receiver) {
 
-                if(props.includes(prop)) {
-                
-                    target[prop] = value;
-                    acao(target);
+                let retorno = Reflect.set(target, prop, value, receiver);
+                if(props.includes(prop)) acao(target); 
+                return retorno;
                 }
-            
-                return Reflect.set(target, prop, value, receiver);
-            }    
-
-        });
+            });
     }
 
     static _ehFuncao(func) {

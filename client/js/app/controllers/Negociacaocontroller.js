@@ -11,13 +11,10 @@ class NegociacaoController {
         this._listaNegociacoes = new Bind(
             new ListaNegociacoes(),
             new NegociacoesView($('#negociacoesView')),
-            this._negociacoesView, 
             'adiciona', 'esvazia');
                 
-        this._mensagem = new Bind (
-            new Mensagem(),
-            new MensagemView($('#mensagemView')),
-            this._mensagemView,
+        this._mensagem = new Bind(
+            new Mensagem(), new MensagemView($('#mensagemView')),
             'texto');
     }
 
@@ -29,27 +26,23 @@ class NegociacaoController {
         this._limpaFormulario();
     }
 
-    importaNegociacao(){
+    importaNegociacoes() {
 
+        
         let service = new NegociacaoService();
-
-        service.obterNegociacaoDaSemana((erro, negociacoes) => {
-
-            if(erro) {
-                this._mensagem.texto = erro;
-                return;
-            }
-
-            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
-            this._mensagem.texto = 'Negociações importadas com sucesso';
-        });
+        service
+        .obterNegociacoes()
+            .then(negociacoes => negociacoes.forEach(negociacao => {
+            this._listaNegociacoes.adiciona(negociacao);
+            this._mensagem.texto = 'Negociações do período importadas'
+        }))
+        .catch(erro => this._mensagem.texto = erro);
     }
 
     apaga() {
 
         this._listaNegociacoes.esvazia();
         this._mensagem.texto = 'Negociações apagadas com sucesso';
-        
     }
 
     _criaNegociacao() {

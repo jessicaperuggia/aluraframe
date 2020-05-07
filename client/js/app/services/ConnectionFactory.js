@@ -1,4 +1,4 @@
-var ConnerctionFactory = (function () {
+var ConnectionFactory = (function () {
 
 
 

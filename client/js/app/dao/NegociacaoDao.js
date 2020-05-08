@@ -1,6 +1,6 @@
 class NegociacaoDao {
 
-    contructor(connection) {
+    constructor(connection) {
 
         this._connection = connection;
         this._store = 'negociacoes';
@@ -23,8 +23,10 @@ class NegociacaoDao {
             request.onerror = e => {
 
               console.log(e.target.error);
-              reject('Nao foi possível adicionar a negociação');  
-            }; 
+              reject('Não foi possível adicionar a negociação');
+
+            };
+
         });
     }
 
@@ -63,12 +65,13 @@ class NegociacaoDao {
                 console.log(e.target.error);
                 reject('Não foi possível listar as negociações');
             }; 
+       
         });
     }
 
     apagaTodos() {
 
-        reurn new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             
             let request = this._connection
                 .transaction([this._store], 'readwrite')
@@ -76,10 +79,13 @@ class NegociacaoDao {
                 .clear();
         
             request.onsuccess = e => resolve('Negociações apagadas com sucesso');
+            
             request.onerror = e => {
-                console.log(e.target.erro);
+                console.log(e.target.error);
                 reject('Não foi possível apagar as negociações');
             };
+        
         }); 
+    
     }
 }
